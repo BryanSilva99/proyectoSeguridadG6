@@ -20,5 +20,8 @@ class Libro(models.Model):
         verbose_name='Estado'
     )
 
+    class Meta:
+        ordering = ['-status', 'title']  # Orden: prestados primero, luego por título
+        
     def __str__(self):
         return f"{self.title} by {self.author}"
