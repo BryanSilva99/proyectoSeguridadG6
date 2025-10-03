@@ -74,6 +74,20 @@ else:
     print('Admin user already exists')
 EOF
 
+# Load books data if CSV file exists and no books exist yet
+if [ -f "data.csv" ]; then
+    echo "Checking if books need to be loaded..."
+    BOOK_COUNT=$(python manage.py shell -c "from Libros.models import Libro; print(Libro.objects.count())")
+    if [ "$BOOK_COUNT" = "0" ]; then
+        echo "No books found. Loading from data.csv..."
+        python manage.py cargar_libros --file=data.csv --limit=200
+    else
+        echo "Books already loaded ($BOOK_COUNT books found)"
+    fi
+else
+    echo "No data.csv file found, skipping book loading"
+fi
+
 # Start server
 echo "Starting Django development server..."
 exec python manage.py runserver 0.0.0.0:8000
