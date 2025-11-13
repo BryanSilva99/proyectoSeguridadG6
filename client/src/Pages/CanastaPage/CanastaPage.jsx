@@ -28,6 +28,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createPrestamo } from "../../api/prestamos.api";
+import { requireCliente } from "../../utils/authGuards";
+
+export async function loader() {
+  // Verify user is authenticated and is a cliente
+  const userOrRedirect = requireCliente();
+  if (userOrRedirect?.status || userOrRedirect?.headers) {
+    // It's a redirect response
+    return userOrRedirect;
+  }
+  return null;
+}
 
 const columns = [
   { id: "isbn", label: "ISBN", minWidth: 100 },

@@ -8,9 +8,17 @@ import { createLibro,getAllLibros } from "../../api/libros.api";
 import { getAllUsuarios } from "../../api/usuarios.api";
 import { createPrestamo,getAllPrestamos } from "../../api/prestamos.api";
 import { ToastContainer, toast } from 'react-toastify';
+import { requireAdmin } from "../../utils/authGuards";
 import "./PanelAdministracion.css";
 
 export async function loader(){
+  // Verify user is authenticated and is an admin
+  const userOrRedirect = requireAdmin();
+  if (userOrRedirect?.status || userOrRedirect?.headers) {
+    // It's a redirect response
+    return userOrRedirect;
+  }
+  // Continue with data loading for admins
   const usuarios=(await getAllUsuarios()).data;
   const libros=(await getAllLibros()).data;
   const prestamos=(await getAllPrestamos()).data;

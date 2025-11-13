@@ -24,6 +24,17 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllUsuarios } from "../../api/usuarios.api";
+import { requireAdmin } from "../../utils/authGuards";
+
+export async function loader() {
+  // Verify user is authenticated and is an admin
+  const userOrRedirect = requireAdmin();
+  if (userOrRedirect?.status || userOrRedirect?.headers) {
+    // It's a redirect response
+    return userOrRedirect;
+  }
+  return null;
+}
 
 const columns = [
   { id: "dni", label: "DNI", minWidth: 100 },

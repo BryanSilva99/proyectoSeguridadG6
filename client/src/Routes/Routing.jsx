@@ -6,12 +6,13 @@ import {RegistrarsePage, loader as registerLoader} from '../Pages/RegistrarsePag
 import { NotFoundPage } from '../Pages/NotFoundPage/NotFoundPage';
 import {LibrosPage} from '../Pages/LibrosPage/LibrosPage';
 import {LibroPage, loader as libroLoader} from '../Pages/LibroPage/LibroPage';
-import {UsuariosPage} from '../Pages/UsuariosPage/UsuariosPage';
+import {UsuariosPage, loader as loaderUsuarios} from '../Pages/UsuariosPage/UsuariosPage';
 import {PerfilPage, loader as loaderPerfil} from '../Pages/PerfilPage/PerfilPage';
 import {PrestamosPage, loader as loaderPrestamos} from '../Pages/PrestamosPage/PrestamosPage';
 import {PrestamoPage, loader as loaderPrestamo} from '../Pages/PrestamoPage/PrestamoPage';
-import {CanastaPage} from '../Pages/CanastaPage/CanastaPage';
+import {CanastaPage, loader as loaderCanasta} from '../Pages/CanastaPage/CanastaPage';
 import {PanelAdministracionPage, loader as loaderPanel} from '../Pages/PanelAdministracionPage/PanelAdministracionPage';
+import {UnauthorizedPage} from '../Pages/UnauthorizedPage/UnauthorizedPage';
 
 
 const routes = createBrowserRouter([
@@ -32,6 +33,10 @@ const routes = createBrowserRouter([
       loader: registerLoader
     },
     {
+      path: "/unauthorized",
+      element: <UnauthorizedPage />
+    },
+    {
       // Authenticated app shell - no userId in URL; we read current user from localStorage
       path: "/app",
       element: <SideBar />,
@@ -39,11 +44,11 @@ const routes = createBrowserRouter([
       children: [
         { path: "libros", element: <LibrosPage /> },
         { path: "libros/:libroId", element: <LibroPage />, loader: libroLoader },
-        { path: "usuarios", element: <UsuariosPage /> },
+        { path: "usuarios", element: <UsuariosPage />, loader: loaderUsuarios },
         { path: "perfil", element: <PerfilPage />, loader: loaderPerfil },
         { path: "prestamos", element: <PrestamosPage />, loader: loaderPrestamos },
         { path: "prestamos/:prestamoId", element: <PrestamoPage />, loader: loaderPrestamo },
-        { path: "canasta", element: <CanastaPage /> },
+        { path: "canasta", element: <CanastaPage />, loader: loaderCanasta },
         { path: "panel-administracion", element: <PanelAdministracionPage />, loader: loaderPanel }
       ]
     }
