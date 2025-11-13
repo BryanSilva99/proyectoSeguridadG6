@@ -1,11 +1,7 @@
-import axios from 'axios';
+import { apiClient } from './api.service';
 
-const prestamosApi = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/prestamos/'  
-});
-
-export const getAllPrestamos=()=>prestamosApi.get("/");
-export const getPrestamo=(id)=>prestamosApi.get(`/${id}/`);
-export const createPrestamo=(prestamo)=>prestamosApi.post("/",prestamo);
-export const deletePrestamo=(id)=>prestamosApi.delete(`/${id}/`);
-export const updatePrestamo=(id,prestamo)=>prestamosApi.put(`/${id}/`,prestamo);
+export const getAllPrestamos = () => apiClient.get('/prestamos/');
+export const getPrestamo = (id) => apiClient.get(`/prestamos/${id}/`);
+export const createPrestamo = (prestamo) => apiClient.post('/prestamos/', prestamo);
+export const deletePrestamo = (id) => apiClient.delete(`/prestamos/${id}/`);
+export const updatePrestamo = (id, prestamo) => apiClient.put(`/prestamos/${id}/`, prestamo);

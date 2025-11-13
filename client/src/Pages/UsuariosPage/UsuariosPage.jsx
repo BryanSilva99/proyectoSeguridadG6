@@ -40,7 +40,6 @@ export const UsuariosPage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchBy, setSearchBy] = useState("dni");
   const navigate = useNavigate();
-  const userId = useParams().userId;
 
   const fetchUsers = async () => {
     try {

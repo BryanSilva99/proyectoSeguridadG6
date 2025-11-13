@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Outlet, useNavigate, useParams, useLoaderData } from "react-router-dom";
-import { getUsuario } from "../../api/usuarios.api";
+import { Outlet, useNavigate, useLoaderData, redirect } from "react-router-dom";
+import useAuthStore from '../../store/authStore';
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -22,16 +22,21 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import logo from "../../assets/logo.png";
 const drawerWidth = 240;
 
-export async function loader({params}){
-  const userId=params.userId;
-  const user= (await getUsuario(userId)).data;
-  return user;
+export async function loader(){
+  // Read current user from localStorage (set at login/register)
+  try{
+    const u = localStorage.getItem('user');
+    if(!u) return redirect('/login');
+    return JSON.parse(u);
+  }catch(err){
+    return redirect('/login');
+  }
 }
 
 export const SideBar = () => {
   const navigate = useNavigate();
   const user=useLoaderData();
-  const [selectedItem, setSelectedItem] = useState(`/${user.dni}/libros`);
+  const [selectedItem, setSelectedItem] = useState(`/app/libros`);
   
 
   const handleItemClick = (route) => {
@@ -66,8 +71,8 @@ export const SideBar = () => {
         <List>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${user.dni}/libros`)}
-              sx={selectedItem === `/${user.dni}/libros` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/app/libros`)}
+              sx={selectedItem === `/app/libros` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <BookIcon />
@@ -77,8 +82,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${user.dni}/usuarios/${user.dni}`)}
-              sx={selectedItem === `/${user.dni}/usuarios/${user.dni}` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/app/usuarios/${user.dni}`)}
+              sx={selectedItem === `/app/usuarios/${user.dni}` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <AccountCircleIcon />
@@ -88,8 +93,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${user.dni}/prestamos`)}
-              sx={selectedItem === `/${user.dni}/prestamos` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/app/prestamos`)}
+              sx={selectedItem === `/app/prestamos` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <AssignmentIcon />
@@ -99,8 +104,8 @@ export const SideBar = () => {
           </ListItem>
           {user.type=="cliente"&&<ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${user.dni}/canasta`)}
-              sx={selectedItem === `/${user.dni}/canasta` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/app/canasta`)}
+              sx={selectedItem === `/app/canasta` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <ShoppingCartIcon />
@@ -110,8 +115,8 @@ export const SideBar = () => {
           </ListItem>}
           {user.type=="administrador"&&<ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${user.dni}/panel-administracion`)}
-              sx={selectedItem === `/${user.dni}/panel-administracion` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/app/panel-administracion`)}
+              sx={selectedItem === `/app/panel-administracion` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <DashboardIcon />
@@ -121,8 +126,8 @@ export const SideBar = () => {
           </ListItem>}
           {user.type=="administrador"&&<ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/${user.dni}/usuarios`)}
-              sx={selectedItem === `/${user.dni}/usuarios` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/app/usuarios`)}
+              sx={selectedItem === `/app/usuarios` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <PeopleIcon />
@@ -136,7 +141,11 @@ export const SideBar = () => {
         <Divider />
           <ListItem disablePadding>
             <ListItemButton 
-             onClick={() => handleItemClick(`/`)}
+             onClick={() => {
+               // call logout from store which clears storage and redirects
+               const logout = useAuthStore.getState().logout;
+               logout();
+             }}
             >
               <ListItemIcon>
                 <ExitToAppIcon />

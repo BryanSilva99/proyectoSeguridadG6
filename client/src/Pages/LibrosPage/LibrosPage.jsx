@@ -41,7 +41,6 @@ export const LibrosPage = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchBy, setSearchBy] = useState("title");
   const navigate = useNavigate();
-  const userId= (useParams()).userId;
 
   const fetchLibros = async () => {
     try {

@@ -47,13 +47,21 @@ export const CanastaPage = () => {
   const [searchBy, setSearchBy] = useState("title");
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
-  const { userId } = useParams(); // Utilizamos userId(dni)
+
+  // read current user dni from localStorage
+  const currentUser = (() => {
+    try {
+      const u = localStorage.getItem('user');
+      return u ? JSON.parse(u) : null;
+    } catch (e) { return null; }
+  })();
+  const userId = currentUser?.dni;
 
   useEffect(() => {
     const storedCanasta =
       JSON.parse(localStorage.getItem(`canasta_${userId}`)) || [];
     setRows(storedCanasta);
-  }, [userId]); // Actualizamos useEffect para que dependa de userId
+  }, [userId]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

@@ -13,8 +13,12 @@ import 'react-toastify/dist/ReactToastify.css';
 export async function loader({ params }) {
   const libroId = params.libroId;
   const libro = (await getLibro(libroId)).data;
-  const userId = params.userId;
-  const user = (await getUsuario(userId)).data;
+  // read current user from localStorage
+  let user = null;
+  try{
+    const u = localStorage.getItem('user');
+    user = u ? JSON.parse(u) : null;
+  }catch(err){ user = null }
   return { libro, user };
 }
 
@@ -44,7 +48,6 @@ const labels = [
 export const LibroPage = () => {
   
   const { libro, user} = useLoaderData();
-  const userId = useParams().userId; 
   const navigate = useNavigate();
   const bookFormatted={
     title: libro.title,
@@ -63,15 +66,16 @@ export const LibroPage = () => {
   const [libroCanasta, setLibroCanasta] = useState(false);
 
   function handleLibroCanasta() {
-    // Obtener la canasta actual del usuario desde localStorage usando userId
-    const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${userId}`)) || [];
+    const uid = user?.dni;
+    // Obtener la canasta actual del usuario desde localStorage usando uid
+    const storedCanasta = JSON.parse(localStorage.getItem(`canasta_${uid}`)) || [];
     // Verificar si el libro ya está en la canasta del usuario
     const libroEnCanasta = storedCanasta.find((item) => item.isbn === libro.isbn);
   
     if (!libroEnCanasta) {
       // Si el libro no está en la canasta, añadirlo y actualizar localStorage
       storedCanasta.push(libro);
-      localStorage.setItem(`canasta_${userId}`, JSON.stringify(storedCanasta));
+      localStorage.setItem(`canasta_${uid}`, JSON.stringify(storedCanasta));
       setLibroCanasta(true);
       toast.success('Libro añadido a la canasta');
     } else {

@@ -13,7 +13,13 @@ export async function loader({params}){
   const prestamos=(await getAllPrestamos()).data;
   const libros=(await getAllLibros()).data;
   const prestamo=(await getPrestamo(params.prestamoId)).data;
-  const userType=(await getUsuario(params.userId)).data.type;
+  // read current user type from localStorage
+  let userType = null;
+  try{
+    const u = localStorage.getItem('user');
+    const parsed = u ? JSON.parse(u) : null;
+    userType = parsed ? parsed.type : null;
+  }catch(err){ userType = null }
   return {usuarios,prestamos,libros,prestamo,userType};
 }
 

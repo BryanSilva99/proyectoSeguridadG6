@@ -1,31 +1,17 @@
 // Se creará un script que enviará una petición al backend
-import axios from 'axios';
-
-const librosApi = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/libros/'  // Base para las peticiones de los libros
-});
+import { apiClient } from './api.service';
 
 // Obtener todos los libros
-export const getAllLibros = () => {
-  return librosApi.get('/');
-};
+export const getAllLibros = () => apiClient.get('/libros/');
 
 // Crear un nuevo libro
-export const createLibro = (libro) => {
-  return librosApi.post('/', libro);
-};
+export const createLibro = (libro) => apiClient.post('/libros/', libro);
 
 // Actualizar un libro existente
-export const updateLibro = (isbn, libro) => {
-  return librosApi.put(`/${isbn}/`, libro);
-};
+export const updateLibro = (isbn, libro) => apiClient.put(`/libros/${isbn}/`, libro);
 
 // Obtener un libro específico
-export const getLibro = (isbn) => {
-  return librosApi.get(`/${isbn}/`);
-};
+export const getLibro = (isbn) => apiClient.get(`/libros/${isbn}/`);
 
 // Eliminar un libro
-export const deleteLibro = (isbn) => {
-  return librosApi.delete(`/${isbn}/`);
-};
+export const deleteLibro = (isbn) => apiClient.delete(`/libros/${isbn}/`);

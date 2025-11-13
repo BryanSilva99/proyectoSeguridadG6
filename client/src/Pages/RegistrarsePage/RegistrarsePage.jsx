@@ -1,9 +1,10 @@
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, redirect } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createUsuario } from '../../api/usuarios.api';
+import { register as registerApi } from '../../api/auth.api';
+import useAuthStore from '../../store/authStore';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
@@ -35,17 +36,25 @@ export const RegistrarsePage = () => {
     };
 
     try {
-      const response = await createUsuario(formattedData);
+      const data = await registerApi(formattedData);
+      // esperado: data.access, data.refresh, data.user
+      if (data && data.user) {
+        // actualizar store / localStorage
+        const setUser = useAuthStore.getState().setUser;
+        const setTokens = useAuthStore.getState().setTokens;
+        setUser(data.user);
+        setTokens({ access: data.access, refresh: data.refresh });
 
-      if (response) {
-        alert("Usuario registrado con éxito.");
-        navigate(`/${formattedData.dni}/libros`);
+  alert("Usuario registrado con éxito.");
+  navigate(`/app/libros`);
       } else {
         alert("No se pudo registrar usuario.");
       }
     } catch (error) {
       console.error("Error registrando usuario:", error);
-      alert("No se pudo registrar usuario. Ingrese datos válidos.");
+      // intentar mostrar mensaje del backend
+      const msg = error?.response?.data?.message || error?.message || 'No se pudo registrar usuario. Ingrese datos válidos.';
+      alert(msg);
     }
   }
 
@@ -115,10 +124,18 @@ export const RegistrarsePage = () => {
             >
               Registrarse
             </Button>
-            <Link to='/' style={{ color: 'black', textDecoration: 'none', marginRight: 'auto', marginLeft: 'auto' }}>Volver</Link>
+            <Link to='/login' style={{ color: 'black', textDecoration: 'none', marginRight: 'auto', marginLeft: 'auto' }}>Volver</Link>
           </div>
         </div>
       </form>
     </div>
   );
 };
+
+export async function loader() {
+  try{
+    const u = localStorage.getItem('user');
+    if (u) return redirect('/app/libros');
+  }catch(err){}
+  return null;
+}

@@ -15,10 +15,15 @@ import { getAllPrestamos } from "../../api/prestamos.api";
 import { getUsuario } from "../../api/usuarios.api";
 import { useLoaderData, useNavigate} from "react-router-dom";
 
-export async function loader({params}){
+export async function loader(){
   const prestamos=(await getAllPrestamos()).data;
-  const usuario=(await getUsuario(params.userId)).data;
-  return {prestamos,usuario};
+  // read current user from localStorage
+  let usuario = null;
+  try{
+    const u = localStorage.getItem('user');
+    usuario = u ? JSON.parse(u) : null;
+  }catch(err){ usuario = null }
+  return {prestamos, usuario};
 }
 
 const columns = [
