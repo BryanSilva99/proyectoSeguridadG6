@@ -10,11 +10,21 @@ import { useNavigate, useLoaderData } from 'react-router-dom';
 import { getUsuario, updateUsuario } from '../../api/usuarios.api';
 import PersonIcon from '@mui/icons-material/Person';
 import CloseIcon from '@mui/icons-material/Close';
+import { redirect } from 'react-router-dom';
 
-export async function loader({ params }) {
-  const perfilId = params.perfilId;
-  const user = (await getUsuario(perfilId)).data;
-  return user;
+export async function loader() {
+  // Get current user from localStorage
+  try {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return redirect('/login');
+    const currentUser = JSON.parse(userStr);
+    // Fetch full user data from backend using the stored user's DNI
+    const user = (await getUsuario(currentUser.dni)).data;
+    return user;
+  } catch (err) {
+    console.error('Error loading profile:', err);
+    return redirect('/login');
+  }
 }
 
 export const PerfilPage = () => {

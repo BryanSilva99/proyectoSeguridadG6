@@ -82,8 +82,8 @@ export const SideBar = () => {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => handleItemClick(`/app/usuarios/${user.dni}`)}
-              sx={selectedItem === `/app/usuarios/${user.dni}` ? { backgroundColor: "#DFBEAD" } : null}
+              onClick={() => handleItemClick(`/app/perfil`)}
+              sx={selectedItem === `/app/perfil` ? { backgroundColor: "#DFBEAD" } : null}
             >
               <ListItemIcon>
                 <AccountCircleIcon />

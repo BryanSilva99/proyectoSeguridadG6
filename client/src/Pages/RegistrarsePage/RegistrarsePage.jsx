@@ -46,7 +46,7 @@ export const RegistrarsePage = () => {
         setTokens({ access: data.access, refresh: data.refresh });
 
   alert("Usuario registrado con éxito.");
-  navigate(`/app/libros`);
+  navigate(`/app/libros`, { replace: true });
       } else {
         alert("No se pudo registrar usuario.");
       }

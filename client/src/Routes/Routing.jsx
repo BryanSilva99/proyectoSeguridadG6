@@ -40,7 +40,7 @@ const routes = createBrowserRouter([
         { path: "libros", element: <LibrosPage /> },
         { path: "libros/:libroId", element: <LibroPage />, loader: libroLoader },
         { path: "usuarios", element: <UsuariosPage /> },
-        { path: "usuarios/:perfilId", element: <PerfilPage />, loader: loaderPerfil },
+        { path: "perfil", element: <PerfilPage />, loader: loaderPerfil },
         { path: "prestamos", element: <PrestamosPage />, loader: loaderPrestamos },
         { path: "prestamos/:prestamoId", element: <PrestamoPage />, loader: loaderPrestamo },
         { path: "canasta", element: <CanastaPage /> },

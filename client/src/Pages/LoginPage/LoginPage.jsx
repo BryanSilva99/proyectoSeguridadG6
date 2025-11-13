@@ -15,7 +15,7 @@ export const LoginPage = () => {
     try {
       const data = await login(dataForm.username, dataForm.password);
       const dni = data?.user?.dni;
-  if (dni) navigate(`/app/libros`);
+  if (dni) navigate(`/app/libros`, { replace: true });
     } catch (err) {
       console.error('Login error', err);
       alert('Credenciales inválidas o error de servidor');
