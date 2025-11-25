@@ -5,10 +5,11 @@ set -e
 
 # Wait for PostgreSQL to be ready
 echo "Waiting for PostgreSQL..."
-while ! nc -z $DB_HOST $DB_PORT; do
-  sleep 0.1
+until pg_isready -h $DB_HOST -p $DB_PORT -U $DB_USER; do
+    sleep 0.5
 done
 echo "PostgreSQL started"
+
 
 # Create migrations for our apps first
 echo "Creating migrations..."
